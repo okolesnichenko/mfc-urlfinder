@@ -4,10 +4,20 @@
 
 
 #pragma once
+#include <list>
+#include "FileUrl.h"
 
+using namespace std;
 
 class CmfcurlDoc : public CDocument
 {
+private:
+	static const int m_maxLength = 1000;
+	CString m_str;
+	CString directory;
+	list <CString> l_htmls;
+	list<FileUrl> l_urls;
+	bool l_urlsIsEmpty{ true };
 protected: // create from serialization only
 	CmfcurlDoc();
 	DECLARE_DYNCREATE(CmfcurlDoc)
@@ -17,7 +27,14 @@ public:
 
 // Operations
 public:
-
+	CString GetContent();
+	list<CString> GetListHtml();
+	list<FileUrl> GetListUrl();
+	
+	void FindUrls(string, string);
+	void SetListUrl(list<FileUrl>);
+	void SetListHtml(list<CString>);
+	void SetStr(CString);
 // Overrides
 public:
 	virtual BOOL OnNewDocument();
@@ -45,4 +62,7 @@ protected:
 	// Helper function that sets search content for a Search Handler
 	void SetSearchContent(const CString& value);
 #endif // SHARED_HANDLERS
+public:
+	afx_msg void OnUpdateActionSomeaction(CCmdUI *pCmdUI);
+	afx_msg void OnActionSomeaction();
 };

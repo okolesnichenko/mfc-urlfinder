@@ -186,6 +186,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ChildFrm.h" />
+    <ClInclude Include="FileUrl.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="mfcurl.h" />
     <ClInclude Include="mfcurlDoc.h" />
@@ -196,6 +197,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ChildFrm.cpp" />
+    <ClCompile Include="FileUrl.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="mfcurl.cpp" />
     <ClCompile Include="mfcurlDoc.cpp" />
@@ -222,4 +224,9 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties RESOURCE_FILE="mfcurl.rc" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>

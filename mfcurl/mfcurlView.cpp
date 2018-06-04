@@ -26,6 +26,8 @@ BEGIN_MESSAGE_MAP(CmfcurlView, CView)
 	ON_COMMAND(ID_FILE_PRINT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CView::OnFilePrintPreview)
+	ON_COMMAND(ID_ACTION_SOMEACTION, &CmfcurlView::OnActionSomeaction)
+	ON_UPDATE_COMMAND_UI(ID_ACTION_SOMEACTION, &CmfcurlView::OnUpdateActionSomeaction)
 END_MESSAGE_MAP()
 
 // CmfcurlView construction/destruction
@@ -50,7 +52,7 @@ BOOL CmfcurlView::PreCreateWindow(CREATESTRUCT& cs)
 
 // CmfcurlView drawing
 
-void CmfcurlView::OnDraw(CDC* /*pDC*/)
+void CmfcurlView::OnDraw(CDC* pDC)
 {
 	CmfcurlDoc* pDoc = GetDocument();
 	ASSERT_VALID(pDoc);
@@ -58,7 +60,38 @@ void CmfcurlView::OnDraw(CDC* /*pDC*/)
 		return;
 
 	// TODO: add draw code for native data here
+	RECT rect;
+	int nY = 0;
+	// размеры нашего окна
+	GetClientRect(&rect);
+	//pDC->Ellipse(&rect);
+	pDC->DrawText(pDoc->GetContent(), &rect, DT_LEFT);
+	nY = 20;
+	if (!listUrlFull)
+	{
+		list <FileUrl> buf = pDoc->GetListUrl();
+		for (auto it = buf.begin(); it != buf.end(); it++)
+		{
+			FileUrl d(*it);
+			CString cfile(d.GetFile().c_str());
+			CString cstr(d.GetName().c_str());
+			CString cline;
+			cline.Format(_T("%d"), d.GetLine());
+			// перерсовывается для каждого URL
+			CString f("File"), s("URL"), l("Line");
+			pDC->TextOutW(0, 0, f);
+			pDC->TextOutW(300, 0, s);
+			pDC->TextOutW(600, 0, l);
+
+			pDC->TextOutW(0, nY, cfile);
+			pDC->TextOutW(300, nY, cstr);
+			pDC->TextOutW(600, nY, cline);
+			nY += 20;
+		}
+	}
+
 }
+
 
 
 // CmfcurlView printing
@@ -102,3 +135,41 @@ CmfcurlDoc* CmfcurlView::GetDocument() const // non-debug version is inline
 
 
 // CmfcurlView message handlers
+
+
+void CmfcurlView::OnActionSomeaction()
+{
+	CmfcurlDoc * doc = GetDocument();
+	listUrlFull = !listUrlFull;
+	doc->OnActionSomeaction();
+	Invalidate();
+	UpdateWindow();
+	// TODO: Add your command handler code here
+}
+
+
+void CmfcurlView::OnUpdateActionSomeaction(CCmdUI *pCmdUI)
+{
+	POSITION pos = theApp.GetFirstDocTemplatePosition();
+	CDocTemplate * pTemplate = (CDocTemplate*)theApp.GetNextDocTemplate(pos);
+	POSITION posDoc = pTemplate->GetFirstDocPosition();
+	if (!posDoc)
+	{
+		pCmdUI->Enable(FALSE);
+	}
+
+	CDocument *pDoc = pTemplate->GetNextDoc(posDoc);
+	CmfcurlDoc *doC = GetDocument();
+	if (doC->GetContent().GetLength() == 0)
+	{
+		pCmdUI->Enable(FALSE);
+	}
+	else
+	{
+		pCmdUI->Enable(pDoc != NULL);
+	}
+	
+
+	
+	// TODO: Add your command update UI handler code here
+}

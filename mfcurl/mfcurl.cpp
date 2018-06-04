@@ -26,6 +26,7 @@ BEGIN_MESSAGE_MAP(CmfcurlApp, CWinApp)
 	ON_COMMAND(ID_FILE_OPEN, &CWinApp::OnFileOpen)
 	// Standard print setup command
 	ON_COMMAND(ID_FILE_PRINT_SETUP, &CWinApp::OnFilePrintSetup)
+	ON_UPDATE_COMMAND_UI(ID_ACTION_SOMEACTION, &CmfcurlApp::OnUpdateActionSomeaction)
 END_MESSAGE_MAP()
 
 
@@ -124,6 +125,7 @@ BOOL CmfcurlApp::InitInstance()
 
 	// Dispatch commands specified on the command line.  Will return FALSE if
 	// app was launched with /RegServer, /Register, /Unregserver or /Unregister.
+	cmdInfo.m_nShellCommand = cmdInfo.FileNothing;
 	if (!ProcessShellCommand(cmdInfo))
 		return FALSE;
 	// The main window has been initialized, so show and update it
@@ -160,6 +162,8 @@ protected:
 // Implementation
 protected:
 	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg void OnUpdateActionSomeaction(CCmdUI *pCmdUI);
 };
 
 CAboutDlg::CAboutDlg() : CDialogEx(IDD_ABOUTBOX)
@@ -172,6 +176,7 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
+	ON_UPDATE_COMMAND_UI(ID_ACTION_SOMEACTION, &CAboutDlg::OnUpdateActionSomeaction)
 END_MESSAGE_MAP()
 
 // App command to run the dialog
@@ -185,3 +190,16 @@ void CmfcurlApp::OnAppAbout()
 
 
 
+
+
+void CmfcurlApp::OnUpdateActionSomeaction(CCmdUI *pCmdUI)
+{
+	pCmdUI->Enable(TRUE);
+	// TODO: Add your command update UI handler code here
+}
+
+
+void CAboutDlg::OnUpdateActionSomeaction(CCmdUI *pCmdUI)
+{
+	// TODO: Add your command update UI handler code here
+}
